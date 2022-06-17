@@ -15,7 +15,7 @@ def generate(args, g_ema, device, mean_latent):
            
            utils.save_image(
             sample,
-            f'sample/{str(i).zfill(6)}.png',
+            f'550000real_generated/{str(i).zfill(6)}.png',
             nrow=1,
             normalize=True,
             range=(-1, 1),
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     ).to(device)
     checkpoint = torch.load(args.ckpt)
 
-    g_ema.load_state_dict(checkpoint['g_ema'])
+    g_ema.load_state_dict(checkpoint['g_ema'],strict=False)
 
     if args.truncation < 1:
         with torch.no_grad():
