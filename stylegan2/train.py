@@ -174,9 +174,9 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
             requires_grad(generator, False)
         else:
             for loc in range(args.finetune_loc):
-                requires_grad(generator, False, target_layer=f'convs.{generator.num_layers-2-2*loc}')
-                requires_grad(generator, False, target_layer=f'convs.{generator.num_layers-3-2*loc}')
-                requires_grad(generator, False, target_layer=f'to_rgbs.{generator.log_size-3-loc}')
+                requires_grad(generator, False, target_layer=f'convs.{generator.module.num_layers-2-2*loc}')
+                requires_grad(generator, False, target_layer=f'convs.{generator.module.num_layers-3-2*loc}')
+                requires_grad(generator, False, target_layer=f'to_rgbs.{generator.module.log_size-3-loc}')
         requires_grad(discriminator, True)
 
         noise = mixing_noise(args.batch, args.latent, args.mixing, device)
@@ -242,9 +242,9 @@ def train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, devic
             requires_grad(generator, True)
         else:
             for loc in range(args.finetune_loc):
-                requires_grad(generator, True, target_layer=f'convs.{generator.num_layers-2-2*loc}')
-                requires_grad(generator, True, target_layer=f'convs.{generator.num_layers-3-2*loc}')
-                requires_grad(generator, True, target_layer=f'to_rgbs.{generator.log_size-3-loc}')
+                requires_grad(generator, True, target_layer=f'convs.{generator.module.num_layers-2-2*loc}')
+                requires_grad(generator, True, target_layer=f'convs.{generator.module.num_layers-3-2*loc}')
+                requires_grad(generator, True, target_layer=f'to_rgbs.{generator.module.log_size-3-loc}')
         requires_grad(discriminator, False)
 
         noise = mixing_noise(args.batch, args.latent, args.mixing, device)
@@ -449,6 +449,7 @@ if __name__ == "__main__":
             device_ids=[args.local_rank],
             output_device=args.local_rank,
             broadcast_buffers=False,
+            find_unused_parameters=True
         )
 
         discriminator = nn.parallel.DistributedDataParallel(
@@ -456,6 +457,7 @@ if __name__ == "__main__":
             device_ids=[args.local_rank],
             output_device=args.local_rank,
             broadcast_buffers=False,
+            find_unused_parameters=True
         )
 
     transform = transforms.Compose(
@@ -475,6 +477,6 @@ if __name__ == "__main__":
     )
 
     if get_rank() == 0 and wandb is not None and args.wandb:
-        wandb.init(project="stylegan 2")
+        wandb.init(project="with ckpt", entity="jennifergroup")
 
     train(args, loader, generator, discriminator, g_optim, d_optim, g_ema, device)
