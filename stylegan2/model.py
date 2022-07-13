@@ -484,9 +484,17 @@ class Generator(nn.Module):
         get_intermediate_layers=False,
         forward_from=1,
         out_and_skip=None,
+        another_style=None,
+        swap_style_from=None
     ):
         if not input_is_latent:
-            styles = [self.style(s) for s in styles]
+            ## for train.py: is_input_latent = False
+            #styles = [self.style(s) for s in styles]
+            ## for projector.py: is_input_latent = False
+            styles = [self.style(torch.unsqueeze(s,0)) for s in styles]
+            if another_style:
+               another_style = [self.style(torch.unsqueeze(s,0)) for s in another_style]
+
 
         if noise is None:
             if randomize_noise:
@@ -506,11 +514,20 @@ class Generator(nn.Module):
 
             styles = style_t
 
+            if another_style:
+                style_t = []
+                for style in another_style:
+                    style_t.append(
+                        truncation_latent + truncation * (style - truncation_latent)
+                    )
+                another_style = style_t
         if len(styles) < 2:
             inject_index = self.n_latent
 
             if styles[0].ndim < 3:
                 latent = styles[0].unsqueeze(1).repeat(1, inject_index, 1)
+                if another_style:
+                    latent_another = another_style[0].unsqueeze(1).repeat(1, inject_index, 1)     
 
             else:
                 latent = styles[0]
@@ -539,9 +556,14 @@ class Generator(nn.Module):
         for conv1, conv2, noise1, noise2, to_rgb in zip(
             self.convs[i-1::2], self.convs[i::2], noise[i::2], noise[i+1::2], self.to_rgbs[i//2:]
         ):
-            out = conv1(out, latent[:, i], noise=noise1)
-            out = conv2(out, latent[:, i + 1], noise=noise2)
-            skip = to_rgb(out, latent[:, i + 2], skip)
+            if not another_style or i < swap_style_from:
+                out = conv1(out, latent[:, i], noise=noise1)#0,2,4,6,8,10
+                out = conv2(out, latent[:, i + 1], noise=noise2)#1,3,5,7,9,11
+                skip = to_rgb(out, latent[:, i + 2], skip)
+            elif another_style and i >= swap_style_from:# i >= 4 or 6 8 10-----corresponding loc 4 3 2 1
+                out = conv1(out, latent_another[:, i], noise=noise1)#0,2,4,6,8,10
+                out = conv2(out, latent_another[:, i + 1], noise=noise2)#1,3,5,7,9,11
+                skip = to_rgb(out, latent_another[:, i + 2], skip)
             if get_intermediate_layers:
                 intermediate_layers.append((out,skip))
 

@@ -87,7 +87,9 @@ if __name__ == "__main__":
     parser.add_argument("--noise_regularize", type=float, default=1e5)
     parser.add_argument("--mse", type=float, default=0)
     parser.add_argument("--w_plus", action="store_true")
+    parser.add_argument("--input_is_latent", action="store_true")
     parser.add_argument("files", metavar="FILES", nargs="+")
+    #parser.add_argument("--files", type=str, required=True)
 
     args = parser.parse_args()
 
@@ -106,7 +108,9 @@ if __name__ == "__main__":
 
     imgs = []
 
+    #for imgfile in sorted(os.listdir(args.files)):
     for imgfile in args.files:
+        #imgfile = os.path.join(args.files, imgfile)
         img = transform(Image.open(imgfile).convert("RGB"))
         imgs.append(img)
 
@@ -137,7 +141,9 @@ if __name__ == "__main__":
 
     if args.w_plus:
         latent_in = latent_in.unsqueeze(1).repeat(1, g_ema.n_latent, 1)
-
+ 
+    if not args.input_is_latent:
+        latent_in = torch.randn(1,512, device=device)
     latent_in.requires_grad = True
 
     for noise in noises:
@@ -154,9 +160,11 @@ if __name__ == "__main__":
         optimizer.param_groups[0]["lr"] = lr
         noise_strength = latent_std * args.noise * max(0, 1 - t / args.noise_ramp) ** 2
         latent_n = latent_noise(latent_in, noise_strength.item())
-
-        img_gen, _ = g_ema([latent_n], input_is_latent=True, noise=noises)
-
+        
+        if args.input_is_latent:
+            img_gen, _ = g_ema([latent_n], input_is_latent=True, noise=noises)
+        else:
+            img_gen, _ = g_ema([latent_n[-1]], input_is_latent=False, noise=noises)
         batch, channel, height, width = img_gen.shape
 
         if height > 256:
@@ -171,7 +179,7 @@ if __name__ == "__main__":
         n_loss = noise_regularize(noises)
         mse_loss = F.mse_loss(img_gen, imgs)
 
-        loss = p_loss + args.noise_regularize * n_loss + args.mse * mse_loss
+        loss = (1-args.mse)*p_loss + args.noise_regularize * n_loss + args.mse * mse_loss
 
         optimizer.zero_grad()
         loss.backward()
@@ -188,9 +196,10 @@ if __name__ == "__main__":
                 f" mse: {mse_loss.item():.4f}; lr: {lr:.4f}"
             )
         )
-
-    img_gen, _ = g_ema([latent_path[-1]], input_is_latent=True, noise=noises)
-
+    if args.input_is_latent:
+        img_gen, _ = g_ema([latent_path[-1]], input_is_latent=args.input_is_latent, noise=noises)
+    else:
+        img_gen, _ = g_ema([latent_path[-1][-1]], input_is_latent=args.input_is_latent, noise=noises)
     filename = os.path.splitext(os.path.basename(args.files[0]))[0] + ".pt"
 
     img_ar = make_image(img_gen)

@@ -102,37 +102,46 @@ if __name__ == "__main__":
     #             range=(-1, 1),
     #         )   
     ######################################################################
-    test_image_path = "images_input_source/550000real_generated/000006.png"
-    test_image = load_image(test_image_path, image_size)
+    path = 'images_input_source/550000real_generated'
+    for image_name in sorted(os.listdir(path)):
+            if os.path.splitext(image_name)[-1].lower() not in [".jpg", ".png", ".bmp", ".tiff"]:
+                continue
+            print(os.path.join(path, image_name))
+            test_image_path = os.path.join(path, image_name)
 
-    num_styles = 5
 
-    latent = stylegan.get_latent(torch.randn(num_styles, latent_dim, device=device))
-    imgs_gen, _ = stylegan([latent],
-                            truncation=truncation,
-                            truncation_latent=trunc,
-                            input_is_latent=True,
-                            randomize_noise=True)
-    # 这里stylegan是拿来生成动漫图的
-    # autoendoder的encoder和generator是
-    inputs = torch.cat([test_image.to(device), imgs_gen])
+            test_image = load_image(test_image_path, 256)
 
-    results = horizontal_concat(inputs.cpu())
-    #cv2.imwrite('see.jpg', cv2.cvtColor(255*tensor2image(results), cv2.COLOR_BGR2RGB))
-    # 生成第一排：一张真图+五张动漫图
+            num_styles = 1
 
-    structures, target_textures = encoder(inputs)
+            latent = stylegan.get_latent(torch.randn(num_styles, latent_dim, device=device))
+            imgs_gen, _ = stylegan([latent],
+                                    truncation=truncation,
+                                    truncation_latent=trunc,
+                                    input_is_latent=True,
+                                    randomize_noise=True)
+            # 这里stylegan是拿来生成动漫图的
+            # autoendoder的encoder和generator是
+            inputs = torch.cat([test_image.to(device), imgs_gen])
 
-    structure = structures[0].unsqueeze(0).repeat(len(target_textures),1,1,1)
-    source_texture = target_textures[0].unsqueeze(0).repeat(len(target_textures),1)
+            results = horizontal_concat(inputs.cpu())
+            #cv2.imwrite('see.jpg', cv2.cvtColor(255*tensor2image(results), cv2.COLOR_BGR2RGB))
+            # 生成第一排：一张真图+五张动漫图
 
-    # 第一列下面两张像真人脸又有点动漫风格，是因为用了encoder在真人脸上提取动漫风格
-    for swap_loc in [3, 5]:
-        textures = [source_texture for _ in range(swap_loc)] + [target_textures for _ in range(len(generator.layers) - swap_loc)]        
-        fake_imgs = generator(structure, textures, noises=0)
+            structures, target_textures = encoder(inputs)
 
-        results = torch.cat([results, horizontal_concat(fake_imgs).cpu()], dim=2)
-            
-    #imshow(tensor2image(results), 23)
+            structure = structures[0].unsqueeze(0).repeat(len(target_textures),1,1,1)
+            source_texture = target_textures[0].unsqueeze(0).repeat(len(target_textures),1)
 
-    cv2.imwrite('06.jpg', cv2.cvtColor(255*tensor2image(results), cv2.COLOR_BGR2RGB))
+            # 第一列下面两张像真人脸又有点动漫风格，是因为用了encoder在真人脸上提取动漫风格
+            #for swap_loc in [3, 5]:
+            for swap_loc in [3]:
+                textures = [source_texture for _ in range(swap_loc)] + [target_textures for _ in range(len(generator.layers) - swap_loc)]        
+                fake_imgs = generator(structure, textures, noises=0)
+
+                #results = torch.cat([results, horizontal_concat(fake_imgs).cpu()], dim=2)
+                results = horizontal_concat(fake_imgs).cpu()
+                    
+            #imshow(tensor2image(results), 23)
+
+            cv2.imwrite("output/"+image_name, cv2.cvtColor(255*tensor2image(results), cv2.COLOR_BGR2RGB))
