@@ -2,6 +2,13 @@
 <div align=center>
 <img src="imgs/real-generate5.png" width="800">
 </div>
+<div align=center>
+First Row : input (not real photos but output from SytleGAN2)
+</div>
+<div align=center>
+Second Row : output from this project.
+</div>
+
 
 ### Introduction
 This project is my master thesis, which transfers human face images into anime ones. The code and idea are heavily based on [FreezeG](https://github.com/bryandlee/FreezeG). The main difference with FreezeG is using style-transfer and then reverse generation here. For the structure and ideas of the model, please check this [slides](https://github.com/jennifer66666/master_thesis_code/blob/master/p5120fg52.pdf).
