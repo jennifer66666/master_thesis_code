@@ -1,6 +1,6 @@
 ## Human-Anime face translation
 
-### U
+### Usage
 #### start a container
 ```
 cd ~ # to mount dir \thesis under this working path
