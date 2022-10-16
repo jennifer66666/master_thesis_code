@@ -83,7 +83,7 @@ if __name__ == "__main__":
     parser.add_argument("--lr", type=float, default=0.1)
     parser.add_argument("--noise", type=float, default=0.05)
     parser.add_argument("--noise_ramp", type=float, default=0.75)
-    parser.add_argument("--step", type=int, default=1000)
+    parser.add_argument("--step", type=int, default=10000)
     parser.add_argument("--noise_regularize", type=float, default=1e5)
     parser.add_argument("--mse", type=float, default=0)
     parser.add_argument("--w_plus", action="store_true")

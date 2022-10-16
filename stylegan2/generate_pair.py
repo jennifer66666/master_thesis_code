@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--ckpt1",
         type=str,
-        default="ckpt_downloaded/550000.pt",
+        default="550000.pt",
         help="path to the original model checkpoint",
     )
     parser.add_argument(
@@ -106,10 +106,12 @@ if __name__ == "__main__":
         for pic in file_names:
             if args.single_file:
                 projector_pt = args.single_file
-                latents = torch.load(projector_pt)['images_input_source/550000real_generated/'+pic+'.png']["latent"].to(device)
+                #latents = torch.load(projector_pt)['images_input_source/550000real_generated/'+pic+'.png']["latent"].to(device)
+                latents = torch.load(projector_pt)['nacio_2.png']["latent"].to(device)
             else:
                 projector_pt = args.input_dir + '/' +pic+'.pt'
-                latents = torch.load(projector_pt)['images_input_source/550000real_generated/'+pic+'.png']["latent"].to(device)
+                #latents = torch.load(projector_pt)['images_input_source/550000real_generated/'+pic+'.png']["latent"].to(device)
+                latents = torch.load(projector_pt)['550000real_generated/'+pic+'.png']["latent"].to(device)
             noise = None
             if args.noise:
                 noise = torch.load(projector_pt)['images_input_source/550000real_generated/'+pic+'.png']["noise"]

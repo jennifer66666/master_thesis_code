@@ -489,11 +489,11 @@ class Generator(nn.Module):
     ):
         if not input_is_latent:
             ## for train.py: is_input_latent = False
-            #styles = [self.style(s) for s in styles]
-            ## for projector.py: is_input_latent = False
-            styles = [self.style(torch.unsqueeze(s,0)) for s in styles]
-            if another_style:
-               another_style = [self.style(torch.unsqueeze(s,0)) for s in another_style]
+            styles = [self.style(s) for s in styles]
+            # # for projector.py: is_input_latent = False
+            # styles = [self.style(torch.unsqueeze(s,0)) for s in styles]
+            # if another_style:
+            #    another_style = [self.style(torch.unsqueeze(s,0)) for s in another_style]
 
 
         if noise is None:
