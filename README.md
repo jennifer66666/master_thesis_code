@@ -1,5 +1,6 @@
-### thesis_dataset
+## Human-Anime face translation
 
+### Usage
 #### start a container
 ```
 cd ~ # to mount dir \thesis under this working path
