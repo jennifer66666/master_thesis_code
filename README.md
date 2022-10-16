@@ -1,7 +1,7 @@
 ## Human-Anime face translation
 ![samples](https://github.com/jennifer66666/master_thesis_code/blob/master/imgs/real-generate5.png)
 ### Introduction
-This project is my master thesis, which transfers human face images into anime ones. The code and idea are heavily based on [FreezeG](https://github.com/bryandlee/FreezeG). The main difference with FreezeG is I use style-transfer and then reverse generation.
+This project is my master thesis, which transfers human face images into anime ones. The code and idea are heavily based on [FreezeG](https://github.com/bryandlee/FreezeG). The main difference with FreezeG is I use style-transfer and then reverse generation here.
 ### Environment
 #### start a container
 ```
