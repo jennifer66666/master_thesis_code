@@ -1,4 +1,5 @@
 ## Human-Anime face translation
+![samples](https://github.com/jennifer66666/master_thesis_code/blob/master/imgs/real-generate5.png)
 
 ### Usage
 #### start a container
