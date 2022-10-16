@@ -1,7 +1,7 @@
 ## Human-Anime face translation
 ![samples](https://github.com/jennifer66666/master_thesis_code/blob/master/imgs/real-generate5.png)
 
-### Usage
+### Environment
 #### start a container
 ```
 cd ~ # to mount dir \thesis under this working path
@@ -13,8 +13,7 @@ docker exec -it 69d1 bash
 ```
 tmux a -t session1
 ```
-
-#### training
+### Training
 ```
 mkdir sample
 mkdir checkpoint
@@ -30,6 +29,7 @@ also need to change the comment in model.py
         # if another_style:  
         #    another_style = [self.style(torch.unsqueeze(s,0)) for s in another_style]  
 ```
+### Generation
 #### generate human and anime pair that not look alike with original FreezeG method
 ```
 python3 FreezeG/stylegan2/generate_pair.py --size 256 --ckpt2 checkpoint/570000.pt --input_is_latent
