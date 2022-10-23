@@ -47,7 +47,7 @@ also need to change the comment in model.py
         #    another_style = [self.style(torch.unsqueeze(s,0)) for s in another_style]  
 ```
 ### Generation
-####Generate human and anime pair that not look alike with original FreezeG method
+#### Generate human and anime pair that not look alike with original FreezeG method
 ```
 python3 FreezeG/stylegan2/generate_pair.py --size 256 --ckpt2 checkpoint/570000.pt --input_is_latent
 ```
