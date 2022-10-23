@@ -45,24 +45,34 @@ also need to change the comment in model.py
         #    another_style = [self.style(torch.unsqueeze(s,0)) for s in another_style]  
 ```
 ### Generation
-#### generate human and anime pair that not look alike with original FreezeG method
+####Generate human and anime pair that not look alike with original FreezeG method
 ```
 python3 FreezeG/stylegan2/generate_pair.py --size 256 --ckpt2 checkpoint/570000.pt --input_is_latent
 ```
-#### step1.train 5800.pt with kaggle rather than mange 2.generate_pair transfer part 3. reverse generate
+#### Step1.train 5800.pt with kaggle rather than mange 2.generate_pair transfer part 3. reverse generate
 ```
 python3 FreezeG/stylegan2/generate_pair.py --ckpt2 checkpoint/580000.pt --transfer_part 3 --input_is_latent
 python3 FreezeG/stylegan2/generate_pair.py --size 256 --ckpt2 checkpoint/570000.pt --input_is_latent --single_file nacio_3.pt
 ```
-#### reverse project an image
+#### Reverse project an image
 ```
 python3 FreezeG/stylegan2/projector.py --ckpt checkpoint/580000.pt images_input_source/550000real_generated/000003.png --input_is_latent
 ```
 ### Problems remain
 when input is real human photos, the output falis.
+<div align=center>
+<img src="imgs/real_foto.jpg" width="800">
+</div>
 
-### cases that FreezeG fail
-FreezeG works perfectly for Simpson family, but badly for anime dataset.
+### Cases that FreezeG fail
+FreezeG works perfectly for Simpson family, but no correspondence between input and output for anime dataset.
+<div align=center>
+<img src="imgs/no_correspondence.jpg" width="800">
+</div>
 
-### more output examples
+### More output examples
+<div align=center>
+<img src="imgs/more_examples1.jpg" width="800">
+<img src="imgs/more_examples2.jpg" width="800">
+</div>
 
