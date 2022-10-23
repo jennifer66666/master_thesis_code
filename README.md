@@ -27,6 +27,8 @@ tmux new -s session1
 tmux a -t session1
 ```
 ### Dataset
+Experimented with different anime datasets, such as one-piece, danbooru, and naruto. But the below one from kaggle somehow works the best.
+https://www.kaggle.com/datasets/splcher/animefacedataset
 
 ### Training
 ```
@@ -71,6 +73,9 @@ FreezeG works perfectly for Simpson family, but no correspondence between input 
 </div>
 
 ### More output examples
+First row: input.  
+Second row: style transfer.  
+Third row: output, reverse generation.
 <div align=center>
 <img src="imgs/more_examples1.jpg" width="800">
 <img src="imgs/more_examples2.jpg" width="800">
