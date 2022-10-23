@@ -11,7 +11,7 @@ Second Row : output from this project.
 
 
 ### Introduction
-This project is my master thesis, which transfers human face images into anime ones. The code and idea are heavily based on [FreezeG](https://github.com/bryandlee/FreezeG). The main difference with FreezeG is using style-transfer and then reverse generation here. For the structure and ideas of the model, please check this [slides](https://github.com/jennifer66666/master_thesis_code/blob/master/p5120fg52.pdf). The details of training, processed input, and model weights (570000.pt, 550000.pt) can be downloaded from the [gdrive_link](https://drive.google.com/drive/folders/1VceRUYdi3oR3V7Gc0UedaLWcBWFsdBIk?usp=sharing).
+This project is my master thesis, which transfers human face images into anime ones. The code and idea are heavily based on [FreezeG](https://github.com/bryandlee/FreezeG). The main difference with FreezeG is using style-transfer and then reverse generation here. Reason to do the change  is because finding that the anime output straightly from FreezeG for some datasets has no correspondance to the input human face (see examples below #FIXME). For the structure and ideas of the model, please check this [slides](https://github.com/jennifer66666/master_thesis_code/blob/master/p5120fg52.pdf). The details of training, processed input, and model weights (570000.pt, 550000.pt) can be downloaded from the [gdrive_link](https://drive.google.com/drive/folders/1VceRUYdi3oR3V7Gc0UedaLWcBWFsdBIk?usp=sharing).
 ### Environment
 #### start a container
 ```
